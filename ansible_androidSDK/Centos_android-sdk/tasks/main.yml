@@ -1,0 +1,55 @@
+---
+- name: Download Java
+  command: "wget -q -O /opt/jdk-8u201-linux-i586.tar.gz --no-check-certificate --no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie' https://download.oracle.com/otn-pub/java/jdk/8u201-b09/42970487e3af4f5aa5bca3f542482c60/jdk-8u201-linux-i586.tar.gz creates=/opt/jdk-8u201-linux-i586.tar.gz"
+
+- name: Unpack archive
+  command: "tar -zxf /opt/jdk-8u201-linux-i586.tar.gz -C /opt creates=/opt/jdk1.8.2_01"
+
+- name: Fix ownership
+  file: state=directory path=/opt/jdk1.8.2_01 owner=root group=root recurse=yes
+
+- name: Make Java available for system
+  command: 'alternatives --install "/usr/bin/java" "java" "/opt/jdk1.8.2_01/bin/java" 2000'
+
+- name: Clean up
+  file: state=absent path=/opt/jdk-8u201-linux-i586.tar.gz
+
+- name: Download Android SDK
+  action: get_url url=https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip dest=/tmp/android.tgz
+  
+- name: Make opt dir for user
+  file:
+    path: /opt/androidSDK/
+    state: directory
+    mode: 0777
+  become: yes
+  
+- name: Create Android SDK directory
+  file:
+    path: /opt/androidSDK/android-sdk-linux
+    state: directory
+  
+- name: Unpack Android SDK
+  unarchive:
+     copy: no
+     src: /tmp/android.tgz
+     dest: /opt/androidSDK/android-sdk-linux
+     creates: /opt/androidSDK/android-sdk-linux/tools
+  
+- name: Chown files
+  action: file path=/opt/androidSDK/android-sdk-linux recurse=yes state=directory
+  
+- name: Install Android SDK
+  shell: yes | ./android update sdk
+  args:
+    chdir: /opt/androidSDK/android-sdk-linux/tools
+  
+- name: Configure Android SDK paths
+  action: lineinfile dest=/etc/profile line="{{ item }}"
+  with_items:
+  - 'export ANDROID_HOME=/opt/androidSDK/android-sdk-linux'
+  - 'export ANDROID_TOOLS=$ANDROID_HOME/tools/'
+  - 'export ANDROID_PLATFORM_TOOLS=$ANDROID_HOME/platform-tools/'
+  - 'export PATH=$PATH:$ANDROID_TOOLS:$ANDROID_PLATFORM_TOOLS'
+  - 'export JAVA_HOME=/opt/jdk1.8.2_01'
+  - 'export PATH=$PATH:$ANDROID_TOOLS:$ANDROID_PLATFORM_TOOLS:/opt/jdk1.8.2_01/bin'
