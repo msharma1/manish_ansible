@@ -1,0 +1,9 @@
+--- 
+- hosts: Linux 
+  roles: 
+    - {role: Linux_android-sdk, become: yes}
+
+- hosts: windows
+  roles:
+    - {role: Windows_android-sdk, become: yes}
+

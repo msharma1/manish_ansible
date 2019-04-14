@@ -1,0 +1,8 @@
+ansible-playbook 2.7.10
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = [u'/home/ec2-user/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python2.7/site-packages/ansible
+  executable location = /usr/bin/ansible-playbook
+  python version = 2.7.14 (default, Jul 26 2018, 19:59:38) [GCC 7.3.1 20180303 (Red Hat 7.3.1-5)]
+Using /etc/ansible/ansible.cfg as config file
+ERROR! the playbook: androidSDK.yml could not be found

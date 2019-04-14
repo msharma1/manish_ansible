@@ -1,0 +1,9 @@
+---
+- name: "Install Android-SDK For Windows"
+  win_chocolatey:
+    name: android-sdk
+    force: yes
+    state: present
+  register: out
+
+- debug: var=out
