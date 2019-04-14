@@ -1,5 +1,0 @@
---- 
-- hosts: Linux 
-
-  roles: 
-    - {role: Centos_android-sdk, become: yes}
