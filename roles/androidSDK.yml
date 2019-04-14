@@ -7,3 +7,6 @@
   roles:
     - {role: Windows_android-sdk, become: yes}
 
+- hosts: MAC
+  roles:
+    - {role: MAC_android-sdk, become: yes}
